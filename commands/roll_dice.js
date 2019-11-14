@@ -1,0 +1,89 @@
+const { Client, RichEmbed } = require('discord.js');
+
+module.exports = message => {
+    let useravatar = message.author.avatarURL
+    let msglist = message.content.split(" ")
+    let msgname = message.content.split("$")[1]
+    let desc = ""
+    let title = ""
+    let color = 0xFFFFFF
+
+    try {
+        let dicepool = Number(msglist[1])
+        let explode = 10
+        let suxx = 0
+
+        if (msglist[2] !== undefined && (msglist[2] == "9a" || msglist[2] == "9again" || msglist[2] == "9agains" || msglist[2] == "9")) {
+            explode = 9
+        }
+        else if (msglist[2] !== undefined && (msglist[2] == "8a" || msglist[2] == "8again" || msglist[2] == "8agains" || msglst[2] == "8")) {
+            explode = 8
+        }
+
+        //loop through the total number of dice in the pool
+        for (i = 1; i <= dicepool; i++) {
+            let die_result = roll_die(explode, suxx)
+            desc += die_result[0]
+            suxx = die_result[1]
+            if (i != dicepool) {
+                desc += ", "
+            }
+        }
+
+        if (msgname !== undefined) {
+            title += msgname + "\n"
+        }
+
+        switch (Number(suxx)) {
+            case 0:
+                title += "failure"
+                color = 0xFF0000
+                break;
+            case 1:
+                title += suxx + " success"
+                color = 0xFFFF00
+                break;
+            case 2:
+            case 3:
+            case 4:
+                title += suxx + " successes"
+                color = 0x009900
+                break;
+            default:
+                title += suxx + " successes\nexceptional success"
+                color = 0x00FF00
+                break;
+        }
+
+    // catch errors
+    } catch (err){
+        title = "error"
+        desc = "something went wrong: " + err
+    }
+
+    // pretty response
+    const embed = new RichEmbed()
+        .setTitle(title)
+        .setColor(color)
+        .setDescription(desc)
+        .setThumbnail(useravatar)
+
+
+    // Send the embed to the same channel as the message
+    message.channel.send(embed);
+}
+
+
+let roll_die = (explode, suxx) => {
+    let roll = Math.ceil(Math.random() * 10)
+    let roll_result = roll
+    if (roll >= 8) {
+        suxx++
+    }
+    if (roll >= explode) {
+        let dice_result = roll_die(explode, suxx)
+        roll_result += " (" + dice_result[0] + ")"
+        suxx = dice_result[1]
+    }
+    return [roll_result, suxx]
+}
