@@ -16,8 +16,11 @@ module.exports = message => {
         if (msglist[2] !== undefined && (msglist[2] == "9a" || msglist[2] == "9again" || msglist[2] == "9agains" || msglist[2] == "9")) {
             explode = 9
         }
-        else if (msglist[2] !== undefined && (msglist[2] == "8a" || msglist[2] == "8again" || msglist[2] == "8agains" || msglst[2] == "8")) {
+        else if (msglist[2] !== undefined && (msglist[2] == "8a" || msglist[2] == "8again" || msglist[2] == "8agains" || msglist[2] == "8")) {
             explode = 8
+        }
+        else {
+            explode = 10
         }
 
         //loop through the total number of dice in the pool
