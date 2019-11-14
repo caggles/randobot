@@ -2,7 +2,7 @@ const { Client, RichEmbed } = require('discord.js');
 const request = require('request');
 
 module.exports = message => {
-    let card_no = message.content.split(" ")[1]
+    let card_no = message.content.split(" ")[2]
     let color = 0xFFFFFF
 
     return request('https://rws-cards-api.herokuapp.com/api/v1/cards/random?n=' + card_no, { json: true }, (err, res, body) => {
@@ -27,17 +27,25 @@ module.exports = message => {
                     color = 0xFFFFFF
                     break;
             }
-            let details = '**Description**\n' + card['desc']
+            let details = ''
             let name = card['name']
 
             if (orientation == 2) {
                 name += " (Reversed)"
-                details += '\n\n**Meaning (Reversed)**\n' + card['meaning_rev']
+                details += '**Meaning (Reversed)**\n' + card['meaning_rev']
             }
             else {
                 name += " (Upright)"
-                details += '\n\n**Meaning (Upright)**\n' + card['meaning_up']
+                details += '**Meaning (Upright)**\n' + card['meaning_up']
             }
+
+            details += '\n\n**Description**\n' + card['desc']
+            if (details.length > 2048) {
+                details = details.substring(0,2048)
+                let last_period = details.lastIndexOf('.')
+                details = details.substring(0, last_period)
+            }
+
 
             const embed = new RichEmbed()
                 .setTitle(name)
