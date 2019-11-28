@@ -11,6 +11,9 @@ module.exports = message => {
     try {
         if (msglist[1].toLowerCase() == 'chance') {
             let roll = Math.ceil(Math.random() * 10)
+            if (msgname !== undefined) {
+                title += msgname + "\n"
+            }
             if (roll == 10) {
                 title += 'success'
                 desc += roll
