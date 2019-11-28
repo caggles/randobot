@@ -8,6 +8,7 @@ module.exports = message => {
     msgtext += 'example: `!roll 5 9a $wits+comp` to roll 5 dice with 9-agains for a wits and composure roll.\n'
     msgtext += '\n**Drawing Tarot Cards**\n'
     msgtext += '`!tarot draw X` to draw X tarot cards, with both upright and reverse results.\n'
-    msgtext += '`!tarot lookup $value of suit` to lookup the meanings of a specific card - only works with minor arcana at the moment.'
+    msgtext += '`!tarot draw X d` to include additional details about the cards you draw.\n'
+    msgtext += '`!tarot lookup $cardname` to lookup the meanings of a specific card.'
     message.reply(msgtext)
 }

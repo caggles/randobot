@@ -46,19 +46,30 @@ module.exports = message => {
                         break;
                 }
 
+                let meaning_up = card['meaning_up']
+                let meaning_rev = card['meaning_rev']
+                let links = card['biddy_link'] + '\n' + card['labyrinthos_link']
 
-                if (details.length > 2048) {
-                    details = details.substring(0, 2048)
-                    let last_period = details.lastIndexOf('.')
-                    details = details.substring(0, last_period)
+                if (meaning_up.length > 1024) {
+                    meaning_up = meaning_up.substring(0, 1024)
+                    let last_period = meaning_up.lastIndexOf('.')
+                    meaning_up = meaning_up.substring(0, last_period)
+                }
+                if (meaning_rev.length > 1024) {
+                    meaning_rev = meaning_rev.substring(0, 1024)
+                    let last_period = meaning_rev.lastIndexOf('.')
+                    meaning_rev = meaning_rev.substring(0, last_period)
                 }
 
                 const embed = new RichEmbed()
                     .setTitle(card['name'])
                     .setColor(color)
-                    .addField('Meaning (Upright)', card['meaning_up'], true)
-                    .addField('Meaning (Reversed)', card['meaning_rev'], true)
-                    .setImage(card['image']);
+                    .addField('Meaning (Upright)', meaning_up, false)
+                    .addField('Meaning (Reversed)', meaning_rev, false)
+                    .addField('Keywords (Upright)', card['keyword_up'], true)
+                    .addField('Keywords (Reversed)', card['keyword_rev'], true)
+                    .addField('Further Information', links)
+                    .setImage(card['rws_image']);
                 message.channel.send(embed);
 
             });
@@ -73,58 +84,5 @@ module.exports = message => {
             .setDescription(details);
         message.channel.send(embed);
     }
-
-    // try {
-    //     let card_name = message.content.split("$")[1].toLowerCase().split(" ")
-    //     if (card_name[1] == "of") {
-    //         let card_value = card_name[0]
-    //         var card_suit = card_name[2]
-    //         if (card_value.length != 2) {
-    //             card_value = '0' + card_value
-    //         }
-    //         var card_shortname = card_suit.substring(0, 2) + card_value
-    //
-    //     } else {
-    //         card_shortname = 'ar01'
-    //     }
-    //     request('https://rws-cards-api.herokuapp.com/api/v1/cards/' + card_shortname, {json: true}, (err, res, body) => {
-    //         if (err) {
-    //             return console.log(err);
-    //         }
-    //         card = body['card']
-    //         switch (card_suit) {
-    //             case 'cups':
-    //                 color = 0x0066CC
-    //                 break;
-    //             case 'pentacles':
-    //                 color = 0xFFCC00
-    //                 break;
-    //             case 'swords':
-    //                 color = 0x990000
-    //                 break;
-    //             case 'wands':
-    //                 color = 0x006633
-    //                 break;
-    //             default:
-    //                 color = 0xFFFFFF
-    //                 break;
-    //         }
-    //         details = '**Meaning (Upright)**\n' + card['meaning_up'] + '\n\n**Meaning (Reversed)**\n' + card['meaning_rev']
-    //         title = card['name']
-    //         const embed = new RichEmbed()
-    //             .setTitle(title)
-    //             .setColor(color)
-    //             .setDescription(details);
-    //         message.channel.send(embed);
-    //     });
-    // } catch (err){
-    //     title = "error"
-    //     details = "something went wrong: " + err + "\ndid you use the correct lookup format? \,`!tarot lookup $value of suit`"
-    //     const embed = new RichEmbed()
-    //         .setTitle(title)
-    //         .setColor(0xFF0000)
-    //         .setDescription(details);
-    //     message.channel.send(embed);
-    // }
 
 }

@@ -42,11 +42,10 @@ def get_cards(url, suit):
             card_dict["value_num"] = value_dict[card_dict["value_en"]]
         card_dict["meaning_up"] = html_card.find_all('p')[0].text
         card_dict["meaning_rev"] = html_card.find_all('p')[1].text
-        image_tag = html_card.find('img')
-        card_dict["image"] = str(image_tag).split('"')[1]
+        card_dict["image"] = html_card.find('img')['src']
+        card_dict["link"] = 'https://www.biddytarot.com/' + html_card.find('a')['href']
         #print(html_card.prettify())
         card_string += str(json.dumps(card_dict)) + '\n'
-
     print(card_string)
 
 get_cards(major_url, 'major')
