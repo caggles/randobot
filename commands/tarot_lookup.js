@@ -53,12 +53,12 @@ module.exports = message => {
                 if (meaning_up.length > 1024) {
                     meaning_up = meaning_up.substring(0, 1024)
                     let last_period = meaning_up.lastIndexOf('.')
-                    meaning_up = meaning_up.substring(0, last_period)
+                    meaning_up = meaning_up.substring(0, last_period+1)
                 }
                 if (meaning_rev.length > 1024) {
                     meaning_rev = meaning_rev.substring(0, 1024)
                     let last_period = meaning_rev.lastIndexOf('.')
-                    meaning_rev = meaning_rev.substring(0, last_period)
+                    meaning_rev = meaning_rev.substring(0, last_period+1)
                 }
 
                 const embed = new RichEmbed()

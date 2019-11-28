@@ -59,7 +59,7 @@ module.exports = message => {
               if (details.length > 2048) {
                   details = details.substring(0,2047)
                   let last_period = details.lastIndexOf('.')
-                  details = details.substring(0, last_period)
+                  details = details.substring(0, last_period+1)
               }
 
               const embed = new RichEmbed()
