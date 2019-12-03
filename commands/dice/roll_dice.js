@@ -1,7 +1,7 @@
-//const { Client, RichEmbed } = require('discord.js');
-const { Command, RichEmbed } = require('discord.js-commando');
+const Discord = require('discord.js');
+const { Command } = require('discord.js-commando');
 
-module.exports = class ReplyCommand extends Command {
+module.exports = class RollCommand extends Command {
     constructor(client) {
         super(client, {
             name: 'roll',
@@ -94,7 +94,7 @@ module.exports = class ReplyCommand extends Command {
         }
 
         // pretty response
-        const embed = new message.RichEmbed()
+        const embedMessage = new Discord.RichEmbed()
             .setTitle(title)
             .setColor(color)
             .setDescription(desc)
@@ -102,7 +102,7 @@ module.exports = class ReplyCommand extends Command {
 
 
         // Send the embed to the same channel as the message
-        message.channel.send(embed);
+        message.embed(embedMessage);
     }
 };
 
