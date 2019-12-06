@@ -1,22 +1,37 @@
-require('dotenv').config()
+const env = require('dotenv').config()
 const fs = require('fs')
 const Discord = require('discord.js')
-const client = new Discord.Client()
+const Commando = require('discord.js-commando')
+const path = require('path')
+const sqlite = require('sqlite');
 
-fs.readdir('./events/', (err, files) => {})
+const client = new Commando.Client({
+    commandPrefix: '!',
+    owner: process.env.OWNER_ID
+});
 
-fs.readdir('./events/', (err, files) => {
-  files.forEach(file => {
-    const eventHandler = require(`./events/${file}`)
-  })
-})
+client.registry
+    .registerDefaultTypes()
+    .registerGroups([
+        ['dice', 'Dice Commands'],
+        ['tarot', 'Tarot Commands'],
+        ['character', 'Character Commands']
+    ])
+    .registerDefaultGroups()
+    .registerDefaultCommands({
+        help: true,
+        prefix: false,
+        ping: true
+    })
+    .registerCommandsIn(path.join(__dirname, 'commands'));
 
-fs.readdir('./events/', (err, files) => {
-  files.forEach(file => {
-    const eventHandler = require(`./events/${file}`)
-    const eventName = file.split('.')[0]
-    client.on(eventName, (...args) => eventHandler(client, ...args))
-  })
-})
+client.setProvider(
+    sqlite.open(path.join(__dirname, 'settings.sqlite3')).then(db => new Commando.SQLiteProvider(db))
+).catch(console.error);
 
-client.login(process.env.BOT_TOKEN)
+client.once('ready', () => {
+	console.log(`Logged in as ${client.user.tag}! (${client.user.id})`);
+	client.user.setActivity('!help');
+});
+
+client.login(process.env.BOT_TOKEN);
