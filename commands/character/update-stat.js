@@ -2,14 +2,9 @@ const Discord = require('discord.js')
 const { Command } = require('discord.js-commando')
 const MongoClient = require('mongodb').MongoClient
 const printCharacter = require('../../functions/print-character')
-const capitalize = require('../../functions/capitalize')
+require('../../functions/capitalize')
+const lists = require('../../utils/const-character')
 require('dotenv').config()
-
-const attribute_names = ['Intelligence', 'Strength', 'Presence', 'Wits', 'Dexterity', 'Manipulation', 'Resolve', 'Stamina', 'Composure']
-const skill_names = ['Academics', 'Athletics', 'Animalken', 'Computers', 'Brawl', 'Empathy', 'Crafts', 'Drive',
-    'Expression', 'Investigation', 'Firearms', 'Intimidation', 'Medicine', 'Larceny', 'Persuasion', 'Occult', 'Stealth',
-    'Socialize', 'Politics', 'Survival', 'Streetwise', 'Science', 'Weaponry', 'Subterfuge']
-const arcana_names = ['Fate', 'Time', 'Mind', 'Space', 'Prime', 'Forces', 'Spirit', 'Life', 'Death', 'Matter']
 
 module.exports = class CharacterCreateCommand extends Command {
     constructor(client) {
@@ -54,19 +49,19 @@ module.exports = class CharacterCreateCommand extends Command {
             value = value.toString().toLowerCase().trim()
 
             //add an 's' to the end of these types if the user didn't provide it.
-            if (type.toLowerCase() == 'attribute' || type.toLowerCase() == 'skill' || type.toLowerCase() == 'merit') {
+            if (type.toLowerCase() === 'attribute' || type.toLowerCase() === 'skill' || type.toLowerCase() === 'merit') {
                 type += 's'
             }
 
             //check for the validity of the stat name, to avoid accidentally adding a new stat called "investigate".
             // TODO: add a stat dictionary so "investigate" automatically swaps to "investigation", etc.
-            if (type == 'attributes' && !attribute_names.includes(name.capitalize())) {
+            if (type === 'attributes' && !(lists.attribute_names.includes(name.capitalize()))) {
                 throw Error ('That is not a valid attribute name!')
             }
-            if (type == 'skills' && !skill_names.includes(name.capitalize())) {
+            if (type === 'skills' && !(lists.skill_names.includes(name.capitalize()))) {
                 throw Error ('That is not a valid skill name!')
             }
-            if (type == 'arcana' && !arcana_names.includes(name.capitalize())) {
+            if (type === 'arcana' && !(lists.arcana_names.includes(name.capitalize()))) {
                 throw Error ('That is not a valid arcanum name!')
             }
 

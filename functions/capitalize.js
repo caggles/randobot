@@ -5,6 +5,5 @@ String.prototype.capitalize = function() {
     word = word.charAt(0).toUpperCase() + word.slice(1)
     newstring += word + ' '
   });
-  newstring.trim()
-  return newstring
+  return newstring.trim()
 }

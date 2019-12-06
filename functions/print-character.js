@@ -1,12 +1,8 @@
 const MongoClient = require('mongodb').MongoClient
 const capitalize = require('./capitalize')
+const lists = require('../utils/const-character')
 require('dotenv').config()
 
-const attribute_names = ['Intelligence', 'Strength', 'Presence', 'Wits', 'Dexterity', 'Manipulation', 'Resolve', 'Stamina', 'Composure']
-const skill_names = ['Academics', 'Athletics', 'Animalken', 'Computers', 'Brawl', 'Empathy', 'Crafts', 'Drive',
-    'Expression', 'Investigation', 'Firearms', 'Intimidation', 'Medicine', 'Larceny', 'Persuasion', 'Occult', 'Stealth',
-    'Socialize', 'Politics', 'Survival', 'Streetwise', 'Science', 'Weaponry', 'Subterfuge']
-const arcana_names = ['Fate', 'Time', 'Mind', 'Space', 'Prime', 'Forces', 'Spirit', 'Life', 'Death', 'Matter']
 
 module.exports = async function printCharacter(message, shadow_name, scope) {
     try {
@@ -35,12 +31,12 @@ module.exports = async function printCharacter(message, shadow_name, scope) {
 
                 //print attributes if the scope is appropriate
                 if (scope == 'attributes' || scope == 'all') {
-                    generateStatBlock(message, 'Attributes', attribute_names, character, 3)
+                    generateStatBlock(message, 'Attributes', lists.attribute_names, character, 3)
                 }
 
                 //print attributes if the scope is appropriate
                 if (scope == 'skills' || scope == 'all') {
-                    generateStatBlock(message, 'Skills', skill_names, character, 3)
+                    generateStatBlock(message, 'Skills', lists.skill_names, character, 3)
                 }
 
                 //print merits if the scope is appropriate
@@ -60,7 +56,7 @@ module.exports = async function printCharacter(message, shadow_name, scope) {
 
                 //print arcana if the scope is appropriate
                 if (scope == 'arcana' || scope == 'all') {
-                    generateStatBlock(message, 'Arcana', arcana_names, character, 2)
+                    generateStatBlock(message, 'Arcana', lists.arcana_names, character, 2)
                 }
 
             });
@@ -83,7 +79,7 @@ function generateStatBlock (message, stat_type, stat_list, character, columns) {
         for (let j = 0; j < spaces; j++) {
             statblock += ' '
         }
-        statblock += current_stat + ' - '
+        statblock += current_stat.capitalize() + ' - '
 
         for (let i = 0; i < 5; i++) {
             if (i < character[stat_type.toLowerCase()][current_stat.toLowerCase()]) {
