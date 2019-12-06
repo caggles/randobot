@@ -44,18 +44,25 @@ module.exports = class CharacterCreateCommand extends Command {
 
     run(message, {character_name, shadow_name, path, virtue, vice}) {
         try {
+
+            //connect to the "character" collection
             const uri = "mongodb+srv://randobot:" + process.env.MONGO_PASSWORD + "@randobot-eni9x.mongodb.net/test?retryWrites=true&w=majority";
             const client = new MongoClient(uri, {useNewUrlParser: true});
             client.connect(err => {
                 const collection = client.db("randobot").collection("characters");
+
+                //define the document for the new character, including a bunch of base stats
                 let character =
                     {   'user': message.author.username,
                         'userid': message.author.id,
                         'character_name': character_name,
                         'shadow_name': shadow_name,
                         'path': path,
+                        'order': '',
                         'virtue': virtue,
                         'vice': vice,
+                        'beats': 0,
+                        'xp': 0,
                         attributes: {
                             'intelligence': 2,
                             'wits': 2,
@@ -70,7 +77,7 @@ module.exports = class CharacterCreateCommand extends Command {
                         skills: {
                             'academics': 0,
                             'athletics': 0,
-                            'animal_ken': 0,
+                            'animalken': 0,
                             'computers': 0,
                             'brawl': 0,
                             'empathy': 0,
@@ -92,18 +99,41 @@ module.exports = class CharacterCreateCommand extends Command {
                             'science': 0,
                             'weaponry': 0,
                             'subterfuge': 0
-                        }
+                        },
+                        arcana: {
+                            'death': 0,
+                            'fate': 0,
+                            'forces': 0,
+                            'life': 0,
+                            'matter': 0,
+                            'mind': 0,
+                            'prime': 0,
+                            'space': 0,
+                            'spirit': 0,
+                            'time': 0
+                        },
+                        merits: {}
                     }
+
+                //insert new character document.
+                //this will fail if the user already has a character with that shadow name (there is a unique index on the collection).
                 let create_promise = collection.insertOne(character)
                 create_promise.then(function (character) {
-                    return printCharacter(message, character["ops"][0]["shadow_name"])
+
+                    //print the resulting character sheet
+                    return printCharacter(message, character["ops"][0]["shadow_name"], 'all')
+
+                    //TODO: add another "reply" suggesting that the user use the !update-stat command to update the default stats.
+
                 })
                 .catch(function (err) {
+
                     if (err["code"] == '11000'){
                         message.reply("You already have a character with that Shadow Name! Are you trying to edit that character?")
                     } else {
                         message.reply("Error: " + err)
                     }
+
                 });
             });
         } catch (err) {
