@@ -18,11 +18,23 @@ module.exports = class CharacterPrintCommand extends Command {
                     prompt: 'What is your character\'s shadow name?',
                     type: 'string'
                 },
+                {
+                    key: 'type',
+                    prompt: 'What information do you want to see? (attributes, skills, arcana, merits, base, all)',
+                    type: 'string',
+                    oneOf: ['arcana', 'attributes', 'attribute', 'skill', 'skills', 'merit', 'merits', 'base', 'all']
+                },
             ]
         });
     }
 
-    run(message, {shadow_name}) {
-        printCharacter(message, shadow_name)
+    run(message, {shadow_name, type}) {
+
+        //add an 's' to the end of these types if the user didn't provide it.
+        if (type.toLowerCase() == 'attribute' || type.toLowerCase() == 'skill' || type.toLowerCase() == 'merit') {
+            type += 's'
+        }
+
+        printCharacter(message, shadow_name, type)
     }
 }
