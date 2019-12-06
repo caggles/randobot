@@ -55,12 +55,12 @@ module.exports = class CharacterCreateCommand extends Command {
                 let character =
                     {   'user': message.author.username,
                         'userid': message.author.id,
-                        'character_name': character_name,
-                        'shadow_name': shadow_name,
-                        'path': path,
+                        'character_name': character_name.toLowerCase(),
+                        'shadow_name': shadow_name.toLowerCase(),
+                        'path': path.toLowerCase(),
                         'order': '',
-                        'virtue': virtue,
-                        'vice': vice,
+                        'virtue': virtue.toLowerCase(),
+                        'vice': vice.toLowerCase(),
                         'beats': 0,
                         'xp': 0,
                         attributes: {
@@ -121,9 +121,11 @@ module.exports = class CharacterCreateCommand extends Command {
                 create_promise.then(function (character) {
 
                     //print the resulting character sheet
-                    return printCharacter(message, character["ops"][0]["shadow_name"], 'all')
+                    let printPromise = printCharacter(message, character["ops"][0]["shadow_name"], 'all')
+                    printPromise.then(function() {
+                        message.say("This is just a default character sheet - update it with `!update-stat`!")
+                    })
 
-                    //TODO: add another "reply" suggesting that the user use the !update-stat command to update the default stats.
 
                 })
                 .catch(function (err) {

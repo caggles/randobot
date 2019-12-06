@@ -1,4 +1,5 @@
 const MongoClient = require('mongodb').MongoClient
+const capitalize = require('./capitalize')
 require('dotenv').config()
 
 const attribute_names = ['Intelligence', 'Strength', 'Presence', 'Wits', 'Dexterity', 'Manipulation', 'Resolve', 'Stamina', 'Composure']
@@ -17,17 +18,17 @@ module.exports = async function printCharacter(message, shadow_name, scope) {
             const collection = client.db("randobot").collection("characters");
 
             //query for the character by shadow name and user (this is unique)
-            let query = {'shadow_name': shadow_name, 'userid': message.author.id}
+            let query = {'shadow_name': shadow_name.toLowerCase(), 'userid': message.author.id}
             let get_promise = collection.findOne(query)
             get_promise.then(function (character) {
 
                 //print the base stats if the scope is appropriate
                 if (scope == 'base' || scope == 'all') {
-                    let base_stats = '----\n**' + character["shadow_name"] + '**\n```\n' +
-                        'Path: ' + character["path"] + '\n' +
-                        'Order: ' + character["order"] + '\n' +
-                        'Virtue: ' + character["virtue"] + '\n' +
-                        'Vice: ' + character["vice"] + '\n' +
+                    let base_stats = '----\n**' + character["shadow_name"].capitalize() + '**\n```\n' +
+                        'Path: ' + character["path"].capitalize() + '\n' +
+                        'Order: ' + character["order"].capitalize() + '\n' +
+                        'Virtue: ' + character["virtue"].capitalize() + '\n' +
+                        'Vice: ' + character["vice"].capitalize() + '\n' +
                         '```----'
                     message.say(base_stats)
                 }
@@ -93,5 +94,6 @@ function generateStatBlock (message, stat_type, stat_list, character, columns) {
         }
     }
     statblock += '```----'
+    statblock = statblock.replace('``````', '```\nnone\n```')
     message.say(statblock)
 }
