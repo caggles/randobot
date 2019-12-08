@@ -94,14 +94,17 @@ module.exports = class UpdateStatCommand extends Command {
                     print_promise.then(function () {
                         message.say("Don't forget to update your `!xp-spend` for this change!")
                     })
+                        .catch(function (err) {
+                            message.reply('Error: ' + err)
+                        })
 
                 })
                 .catch(function (err) {
-                    message.reply(err)
+                    message.reply('Error: ' + err)
                 });
             });
         } catch (err) {
-            message.reply('' + err)
+            message.reply('Error: ' + err)
         }
     }
 }

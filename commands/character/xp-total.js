@@ -38,44 +38,58 @@ module.exports = class XPPrintCommand extends Command {
                 let get_promise = collection.findOne(query)
                 get_promise.then(function (character) {
 
-                    //get starting xp for the character
-                    let starting_xp = character['xp']
+                    if (character == null) {
+                        message.reply("that character doesn't exist.")
+                    } else {
 
-                    //connect to the "beats" collection
-                    client.connect(err => {
-                        const collection = client.db("randobot").collection("beats");
+                        //get starting xp for the character
+                        let starting_xp = character['xp']
 
-                        //query for a count of beats by shadow name and user
-                        let query = {'shadow_name': shadow_name.toLowerCase(), 'userid': message.author.id}
-                        collection.aggregate(
-                            [ { '$match': query }, { '$group': { '_id': null, 'count': { '$sum': 1 } } }],
-                        function(err, cursor) {
-                            assert.equal(err, null);
-                            cursor.toArray(function(err, documents) {
-                                console.log(documents)
-                                let earned_xp = Math.floor(documents[0]["count"]/5);
-                                let beats = documents[0]["count"]%5;
-                                console.log(earned_xp)
+                        //connect to the "beats" collection
+                        client.connect(err => {
+                            const collection = client.db("randobot").collection("beats");
 
-                                 //connect to the "xp-spends" collection
-                                client.connect(err => {
-                                    const collection = client.db("randobot").collection("xp-spends");
+                            //query for a count of beats by shadow name and user
+                            let query = {'shadow_name': shadow_name.toLowerCase(), 'userid': message.author.id}
+                            collection.aggregate(
+                                [{'$match': query}, {'$group': {'_id': null, 'count': {'$sum': 1}}}],
+                            function (err, cursor) {
+                                assert.equal(err, null);
+                                cursor.toArray(function (err, documents) {
+                                    console.log(documents)
+                                    let earned_xp = Math.floor(documents[0]["count"] / 5);
+                                    let beats = documents[0]["count"] % 5;
+                                    console.log(earned_xp)
 
-                                    //query for a count of the total xp spent by shadow name and user
-                                    let query = {'shadow_name': shadow_name.toLowerCase(), 'userid': message.author.id}
-                                    collection.aggregate(
-                                      [ { '$match': query }, { '$group': { '_id': null, 'totalAmount': { '$sum': '$amount' } } }],
-                                    function(err, cursor) {
-                                        assert.equal(err, null);
-                                        cursor.toArray(function(err, documents) {
-                                            let totalXP = starting_xp + earned_xp
-                                            message.reply("\nTotal XP Earned: " + totalXP + "\nTotal XP Spent: " + documents[0]["totalAmount"] + "\nBeats Remaining: " + beats)
-                                        });
+                                    //connect to the "xp-spends" collection
+                                    client.connect(err => {
+                                        const collection = client.db("randobot").collection("xp-spends");
+
+                                        //query for a count of the total xp spent by shadow name and user
+                                        let query = {
+                                            'shadow_name': shadow_name.toLowerCase(),
+                                            'userid': message.author.id
+                                        }
+                                        collection.aggregate(
+                                            [{'$match': query}, {
+                                                '$group': {
+                                                    '_id': null,
+                                                    'totalAmount': {'$sum': '$amount'}
+                                                }
+                                            }],
+                                            function (err, cursor) {
+                                                assert.equal(err, null);
+                                                cursor.toArray(function (err, documents) {
+                                                    let totalXP = starting_xp + earned_xp
+                                                    message.reply("\nTotal XP Earned: " + totalXP + "\nTotal XP Spent: " + documents[0]["totalAmount"] + "\nBeats Remaining: " + beats)
+                                                });
+                                            }
+                                        );
                                     });
                                 });
                             });
                         });
-                    });
+                    }
                 });
             });
 

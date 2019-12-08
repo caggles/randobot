@@ -56,11 +56,11 @@ module.exports = class CharacterCreateCommand extends Command {
 
                 })
                 .catch(function (err) {
-                    message.reply(err)
+                    message.reply('Error: ' + err)
                 });
             });
         } catch (err) {
-            message.reply('' + err)
+            message.reply('Error: ' + err)
         }
     }
 }
