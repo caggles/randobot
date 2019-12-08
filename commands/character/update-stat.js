@@ -41,7 +41,7 @@ module.exports = class UpdateStatCommand extends Command {
         });
     }
 
-    run(message, {shadow_name, type, name, value}) {
+    async run(message, {shadow_name, type, name, value}) {
         try {
 
             name = name.toString().toLowerCase().trim()
@@ -90,10 +90,10 @@ module.exports = class UpdateStatCommand extends Command {
                 update_promise.then(function (character) {
 
                     //print the new character sheet with update info.
-                    return printCharacter(message, character["value"]["shadow_name"], type)
-
-                    //TODO: add the !update-xp and !beat+ commands
-                    //TODO: add another reply reminding the user to update their xp spends if appropriate.
+                    let print_promise = printCharacter(message, character["value"]["shadow_name"], type)
+                    print_promise.then(function () {
+                        message.say("Don't forget to update your `!xp-spend` for this change!")
+                    })
 
                 })
                 .catch(function (err) {
