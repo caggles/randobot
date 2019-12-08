@@ -5,66 +5,70 @@ require('dotenv').config()
 
 
 module.exports = async function printCharacter(message, shadow_name, scope) {
-    try {
+    return new Promise((resolve, reject) => {
+        try {
 
-        //connect to the "characters" collection
-        const uri = "mongodb+srv://randobot:" + process.env.MONGO_PASSWORD + "@randobot-eni9x.mongodb.net/test?retryWrites=true&w=majority";
-        const client = new MongoClient(uri, {useNewUrlParser: true});
-        client.connect(err => {
-            const collection = client.db("randobot").collection("characters");
+            //connect to the "characters" collection
+            const uri = "mongodb+srv://randobot:" + process.env.MONGO_PASSWORD + "@randobot-eni9x.mongodb.net/test?retryWrites=true&w=majority";
+            const client = new MongoClient(uri, {useNewUrlParser: true});
+            client.connect(err => {
+                const collection = client.db("randobot").collection("characters");
 
-            //query for the character by shadow name and user (this is unique)
-            let query = {'shadow_name': shadow_name.toLowerCase(), 'userid': message.author.id}
-            let get_promise = collection.findOne(query)
-            get_promise.then(function (character) {
+                //query for the character by shadow name and user (this is unique)
+                let query = {'shadow_name': shadow_name.toLowerCase(), 'userid': message.author.id}
+                let get_promise = collection.findOne(query)
+                get_promise.then(function (character) {
 
-                //print the base stats if the scope is appropriate
-                if (scope == 'base' || scope == 'all') {
-                    let base_stats = '----\n**' + character["shadow_name"].capitalize() + '**\n```\n' +
-                        'Path: ' + character["path"].capitalize() + '\n' +
-                        'Order: ' + character["order"].capitalize() + '\n' +
-                        'Virtue: ' + character["virtue"].capitalize() + '\n' +
-                        'Vice: ' + character["vice"].capitalize() + '\n' +
-                        '```----'
-                    message.say(base_stats)
-                }
-
-                //print attributes if the scope is appropriate
-                if (scope == 'attributes' || scope == 'all') {
-                    generateStatBlock(message, 'Attributes', lists.attribute_names, character, 3)
-                }
-
-                //print attributes if the scope is appropriate
-                if (scope == 'skills' || scope == 'all') {
-                    generateStatBlock(message, 'Skills', lists.skill_names, character, 3)
-                }
-
-                //print merits if the scope is appropriate
-                if (scope == 'merits' || scope == 'all') {
-                    let merit_names = []
-                    for (let merit_name in character["merits"]) {
-                        merit_names.push(merit_name)
+                    //print the base stats if the scope is appropriate
+                    if (scope == 'base' || scope == 'all') {
+                        let base_stats = '----\n**' + character["shadow_name"].capitalize() + '**\n```\n' +
+                            'Path: ' + character["path"].capitalize() + '\n' +
+                            'Order: ' + character["order"].capitalize() + '\n' +
+                            'Virtue: ' + character["virtue"].capitalize() + '\n' +
+                            'Vice: ' + character["vice"].capitalize() + '\n' +
+                            '```----'
+                        message.say(base_stats)
                     }
-                    let columns = 1
-                    if (merit_names.length > 5) {
-                        columns = 2
-                    } else if (merit_names.length > 8) {
-                        columns = 3
+
+                    //print attributes if the scope is appropriate
+                    if (scope == 'attributes' || scope == 'all') {
+                        generateStatBlock(message, 'Attributes', lists.attribute_names, character, 3)
                     }
-                    generateStatBlock(message, 'Merits', merit_names, character, columns)
-                }
 
-                //print arcana if the scope is appropriate
-                if (scope == 'arcana' || scope == 'all') {
-                    generateStatBlock(message, 'Arcana', lists.arcana_names, character, 2)
-                }
+                    //print attributes if the scope is appropriate
+                    if (scope == 'skills' || scope == 'all') {
+                        generateStatBlock(message, 'Skills', lists.skill_names, character, 3)
+                    }
 
+                    //print merits if the scope is appropriate
+                    if (scope == 'merits' || scope == 'all') {
+                        let merit_names = []
+                        for (let merit_name in character["merits"]) {
+                            merit_names.push(merit_name)
+                        }
+                        let columns = 1
+                        if (merit_names.length > 5) {
+                            columns = 2
+                        } else if (merit_names.length > 8) {
+                            columns = 3
+                        }
+                        generateStatBlock(message, 'Merits', merit_names, character, columns)
+                    }
+
+                    //print arcana if the scope is appropriate
+                    if (scope == 'arcana' || scope == 'all') {
+                        generateStatBlock(message, 'Arcana', lists.arcana_names, character, 2)
+                    }
+
+                    resolve(null);
+
+                });
             });
-        });
-    } catch (err) {
-        message.reply("Error: " + err)
-    }
-    return true;
+        } catch (err) {
+            message.reply("Error: " + err);
+            reject(err);
+        }
+    });
 }
 
 function generateStatBlock (message, stat_type, stat_list, character, columns) {

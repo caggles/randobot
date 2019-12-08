@@ -6,7 +6,7 @@ require('../../functions/capitalize')
 const lists = require('../../utils/const-character')
 require('dotenv').config()
 
-module.exports = class CharacterCreateCommand extends Command {
+module.exports = class UpdateStatCommand extends Command {
     constructor(client) {
         super(client, {
             name: 'update-stat',

@@ -38,11 +38,16 @@ module.exports = class CharacterCreateCommand extends Command {
                     prompt: 'Vice?',
                     type: 'string'
                 },
+                {
+                    key: 'starting_xp',
+                    prompt: 'Starting XP?',
+                    type: 'integer'
+                }
             ]
         });
     }
 
-    run(message, {character_name, shadow_name, path, virtue, vice}) {
+    run(message, {character_name, shadow_name, path, virtue, vice, starting_xp}) {
         try {
 
             //connect to the "character" collection
@@ -62,7 +67,7 @@ module.exports = class CharacterCreateCommand extends Command {
                         'virtue': virtue.toLowerCase(),
                         'vice': vice.toLowerCase(),
                         'beats': 0,
-                        'xp': 0,
+                        'xp': starting_xp,
                         attributes: {
                             'intelligence': 2,
                             'wits': 2,
@@ -117,14 +122,14 @@ module.exports = class CharacterCreateCommand extends Command {
 
                 //insert new character document.
                 //this will fail if the user already has a character with that shadow name (there is a unique index on the collection).
-                let create_promise = collection.insertOne(character)
+                let create_promise = collection.insertOne(character);
                 create_promise.then(function (character) {
 
                     //print the resulting character sheet
-                    let printPromise = printCharacter(message, character["ops"][0]["shadow_name"], 'all')
+                    let printPromise = printCharacter(message, character["ops"][0]["shadow_name"], 'all');
                     printPromise.then(function() {
                         message.say("This is just a default character sheet - update it with `!update-stat`!")
-                    })
+                    });
 
 
                 })
