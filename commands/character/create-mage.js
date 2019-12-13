@@ -64,6 +64,7 @@ module.exports = class CharacterCreateCommand extends Command {
                         'shadow_name': shadow_name.toLowerCase(),
                         'path': path.toLowerCase(),
                         'order': '',
+                        'gnosis': 0,
                         'virtue': virtue.toLowerCase(),
                         'vice': vice.toLowerCase(),
                         'beats': 0,
