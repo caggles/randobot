@@ -38,11 +38,16 @@ module.exports = class CharacterCreateCommand extends Command {
                     prompt: 'Vice?',
                     type: 'string'
                 },
+                {
+                    key: 'starting_xp',
+                    prompt: 'Starting XP?',
+                    type: 'integer'
+                }
             ]
         });
     }
 
-    run(message, {character_name, shadow_name, path, virtue, vice}) {
+    run(message, {character_name, shadow_name, path, virtue, vice, starting_xp}) {
         try {
 
             //connect to the "character" collection
@@ -55,14 +60,15 @@ module.exports = class CharacterCreateCommand extends Command {
                 let character =
                     {   'user': message.author.username,
                         'userid': message.author.id,
-                        'character_name': character_name,
-                        'shadow_name': shadow_name,
-                        'path': path,
+                        'character_name': character_name.toLowerCase(),
+                        'shadow_name': shadow_name.toLowerCase(),
+                        'path': path.toLowerCase(),
                         'order': '',
-                        'virtue': virtue,
-                        'vice': vice,
+                        'gnosis': 0,
+                        'virtue': virtue.toLowerCase(),
+                        'vice': vice.toLowerCase(),
                         'beats': 0,
-                        'xp': 0,
+                        'xp': starting_xp,
                         attributes: {
                             'intelligence': 2,
                             'wits': 2,
@@ -117,13 +123,15 @@ module.exports = class CharacterCreateCommand extends Command {
 
                 //insert new character document.
                 //this will fail if the user already has a character with that shadow name (there is a unique index on the collection).
-                let create_promise = collection.insertOne(character)
+                let create_promise = collection.insertOne(character);
                 create_promise.then(function (character) {
 
                     //print the resulting character sheet
-                    return printCharacter(message, character["ops"][0]["shadow_name"], 'all')
+                    let print_promise = printCharacter(message, character["ops"][0]["shadow_name"], 'all');
+                    print_promise.then(function() {
+                        message.say("This is just a default character sheet - update it with `!update-stat`!")
+                    });
 
-                    //TODO: add another "reply" suggesting that the user use the !update-stat command to update the default stats.
 
                 })
                 .catch(function (err) {

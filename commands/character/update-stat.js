@@ -2,15 +2,11 @@ const Discord = require('discord.js')
 const { Command } = require('discord.js-commando')
 const MongoClient = require('mongodb').MongoClient
 const printCharacter = require('../../functions/print-character')
+require('../../functions/capitalize')
+const lists = require('../../utils/const-character')
 require('dotenv').config()
 
-const attribute_names = ['Intelligence', 'Strength', 'Presence', 'Wits', 'Dexterity', 'Manipulation', 'Resolve', 'Stamina', 'Composure']
-const skill_names = ['Academics', 'Athletics', 'Animalken', 'Computers', 'Brawl', 'Empathy', 'Crafts', 'Drive',
-    'Expression', 'Investigation', 'Firearms', 'Intimidation', 'Medicine', 'Larceny', 'Persuasion', 'Occult', 'Stealth',
-    'Socialize', 'Politics', 'Survival', 'Streetwise', 'Science', 'Weaponry', 'Subterfuge']
-const arcana_names = ['Fate', 'Time', 'Mind', 'Space', 'Prime', 'Forces', 'Spirit', 'Life', 'Death', 'Matter']
-
-module.exports = class CharacterCreateCommand extends Command {
+module.exports = class UpdateStatCommand extends Command {
     constructor(client) {
         super(client, {
             name: 'update-stat',
@@ -45,25 +41,30 @@ module.exports = class CharacterCreateCommand extends Command {
         });
     }
 
-    run(message, {shadow_name, type, name, value}) {
+    async run(message, {shadow_name, type, name, value}) {
         try {
 
+            name = name.toString().toLowerCase().trim()
+            type = type.toString().toLowerCase().trim()
+            value = value.toString().toLowerCase().trim()
+
             //add an 's' to the end of these types if the user didn't provide it.
-            if (type.toLowerCase() == 'attribute' || type.toLowerCase() == 'skill' || type.toLowerCase() == 'merit') {
+            if (type.toLowerCase() === 'attribute' || type.toLowerCase() === 'skill' || type.toLowerCase() === 'merit') {
                 type += 's'
             }
 
             //check for the validity of the stat name, to avoid accidentally adding a new stat called "investigate".
             // TODO: add a stat dictionary so "investigate" automatically swaps to "investigation", etc.
-            if (type == 'attributes' && !attribute_names.includes(capitalize(name))) {
+            if (type === 'attributes' && !(lists.attribute_names.includes(name.capitalize()))) {
                 throw Error ('That is not a valid attribute name!')
             }
-            if (type == 'skills' && !skill_names.includes(capitalize(name))) {
+            if (type === 'skills' && !(lists.skill_names.includes(name.capitalize()))) {
                 throw Error ('That is not a valid skill name!')
             }
-            if (type == 'arcana' && !arcana_names.includes(capitalize(name))) {
+            if (type === 'arcana' && !(lists.arcana_names.includes(name.capitalize()))) {
                 throw Error ('That is not a valid arcanum name!')
             }
+
 
             //connect to the "character" collection
             const uri = "mongodb+srv://randobot:" + process.env.MONGO_PASSWORD + "@randobot-eni9x.mongodb.net/test?retryWrites=true&w=majority";
@@ -72,7 +73,7 @@ module.exports = class CharacterCreateCommand extends Command {
                 const collection = client.db("randobot").collection("characters");
 
                 //query against the given shadow name and the user's ID, to make sure nobody can edit another person's character.
-                let query = {shadow_name: shadow_name, userid: message.author.id}
+                let query = {shadow_name: shadow_name.toLowerCase(), userid: message.author.id}
 
                 //set up the name of the field to be updated
                 let field = type + '.' + name
@@ -89,25 +90,21 @@ module.exports = class CharacterCreateCommand extends Command {
                 update_promise.then(function (character) {
 
                     //print the new character sheet with update info.
-                    return printCharacter(message, character["value"]["shadow_name"], type)
-
-                    //TODO: add the !update-xp and !beat+ commands
-                    //TODO: add another reply reminding the user to update their xp spends if appropriate.
+                    let print_promise = printCharacter(message, character["value"]["shadow_name"], type)
+                    print_promise.then(function () {
+                        message.say("Don't forget to update your `!xp-spend` for this change!")
+                    })
+                        .catch(function (err) {
+                            message.reply('Error: ' + err)
+                        })
 
                 })
                 .catch(function (err) {
-                    message.reply(err)
+                    message.reply('Error: ' + err)
                 });
             });
         } catch (err) {
-            message.reply('' + err)
+            message.reply('Error: ' + err)
         }
     }
-}
-
-//function to capitalize the first letter
-//TODO: add this to functions folder
-const capitalize = (s) => {
-  if (typeof s !== 'string') return ''
-  return s.charAt(0).toUpperCase() + s.slice(1)
 }
