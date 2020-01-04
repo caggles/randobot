@@ -64,7 +64,7 @@ module.exports = class CharacterCreateCommand extends Command {
                         'shadow_name': shadow_name.toLowerCase(),
                         'path': path.toLowerCase(),
                         'order': '',
-                        'gnosis': 0,
+                        'gnosis': '0',
                         'virtue': virtue.toLowerCase(),
                         'vice': vice.toLowerCase(),
                         'beats': 0,
@@ -106,6 +106,17 @@ module.exports = class CharacterCreateCommand extends Command {
                             'weaponry': 0,
                             'subterfuge': 0
                         },
+                        specs: {},
+                        merits: {},
+                        consumable: {
+                            health: {
+                                agg: 0,
+                                lethal: 0,
+                                bashing: 0
+                            },
+                            willpower: 4,
+                            mana: 0
+                        },
                         arcana: {
                             'death': 0,
                             'fate': 0,
@@ -117,8 +128,7 @@ module.exports = class CharacterCreateCommand extends Command {
                             'space': 0,
                             'spirit': 0,
                             'time': 0
-                        },
-                        merits: {}
+                        }
                     }
 
                 //insert new character document.

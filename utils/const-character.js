@@ -3,3 +3,12 @@ module.exports.skill_names = ['Academics', 'Athletics', 'Animalken', 'Computers'
     'Expression', 'Investigation', 'Firearms', 'Intimidation', 'Medicine', 'Larceny', 'Persuasion', 'Occult', 'Stealth',
     'Socialize', 'Politics', 'Survival', 'Streetwise', 'Science', 'Weaponry', 'Subterfuge']
 module.exports.arcana_names = ['Fate', 'Time', 'Mind', 'Space', 'Prime', 'Forces', 'Spirit', 'Life', 'Death', 'Matter']
+module.exports.base_names = ['Path', 'Virtue', 'Gnosis', 'Order', 'Vice']
+module.exports.alt_skill_names =
+    {'Investigate': 'Investigation',
+    'Persuade': 'Persuasion',
+    'Intimidate': 'Intimidation',
+    'Weapons': 'Weaponry',
+    'Politic': 'Politics',
+    'Express': 'Expression',
+    'Computer': 'Computers'}

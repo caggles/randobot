@@ -26,13 +26,9 @@ module.exports = function printCharacter(message, shadow_name, scope) {
 
                         //print the base stats if the scope is appropriate
                         if (scope == 'base' || scope == 'all') {
-                            let base_stats = '----\n**' + character["shadow_name"].capitalize() + '**\n```\n' +
-                                'Path: ' + character["path"].capitalize() + '\n' +
-                                'Order: ' + character["order"].capitalize() + '\n' +
-                                'Virtue: ' + character["virtue"].capitalize() + '\n' +
-                                'Vice: ' + character["vice"].capitalize() + '\n' +
-                                '```----'
+                            let base_stats = '----\n**' + character["shadow_name"].capitalize() + '**\n'
                             message.say(base_stats)
+                            generateWordBlock(message, '', lists.base_names, character, 3)
                         }
 
                         //print attributes if the scope is appropriate
@@ -43,6 +39,11 @@ module.exports = function printCharacter(message, shadow_name, scope) {
                         //print attributes if the scope is appropriate
                         if (scope == 'skills' || scope == 'all') {
                             generateStatBlock(message, 'Skills', lists.skill_names, character, 3)
+                            let spec_names = []
+                            for (let spec_name in character["specs"]) {
+                                spec_names.push(spec_name)
+                            }
+                            generateWordBlock(message, 'Specs', spec_names, character, 1)
                         }
 
                         //print merits if the scope is appropriate
@@ -101,4 +102,36 @@ function generateStatBlock (message, stat_type, stat_list, character, columns) {
     statblock += '```----'
     statblock = statblock.replace('``````', '```\nnone\n```')
     message.say(statblock)
+}
+
+function generateWordBlock (message, stat_type, stat_list, character, columns) {
+    let wordblock = stat_type + '\n' + '```'
+    for (let i = 0; i < stat_list.length; i++) {
+        let current_stat = stat_list[i]
+        let letters = current_stat.length
+        let spaces = 15 - letters
+        if (i % columns == 0) {
+            wordblock += '\n'
+        }
+        for (let j = 0; j < spaces; j++) {
+            wordblock += ' '
+        }
+        if (stat_type == '') {
+            wordblock += current_stat.capitalize() + ' - ' + character[current_stat.toLowerCase()].capitalize()
+            letters = character[current_stat.toLowerCase()].length
+            spaces = 15 - letters
+        } else {
+            wordblock += current_stat.capitalize() + ' - ' + character[stat_type.toLowerCase()][current_stat.toLowerCase()].capitalize()
+            letters = character[stat_type.toLowerCase()][current_stat.toLowerCase()].length
+            spaces = 15 - letters
+        }
+        for (let j = 0; j < spaces; j++) {
+            wordblock += ' '
+        }
+
+
+    }
+    wordblock += '```----'
+    wordblock = wordblock.replace('``````', '```\nnone\n```')
+    message.say(wordblock)
 }
