@@ -6,7 +6,7 @@ module.exports = class BeatPrintCommand extends Command {
     constructor(client) {
         super(client, {
             name: 'print-beats',
-            group: 'character',
+            group: 'archive',
             memberName: 'print-beats',
             description: 'prints recent beats',
             examples: ['`!print-beats [shadow-name] x` to print the x most recent beats.'],
@@ -26,6 +26,6 @@ module.exports = class BeatPrintCommand extends Command {
     }
 
     run(message, {shadow_name, number}) {
-        printBeats(message, shadow_name, 'last', number, 'beats')
+        printBeats(message, message.author.id, shadow_name, 'last', number, 'beats')
     }
 }

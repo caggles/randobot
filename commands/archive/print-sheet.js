@@ -8,7 +8,7 @@ module.exports = class CharacterPrintCommand extends Command {
     constructor(client) {
         super(client, {
             name: 'print-sheet',
-            group: 'character',
+            group: 'archive',
             memberName: 'print-sheet',
             description: 'prints a character sheet',
             examples: ['`!print-sheet [shadowname]` to have the bot print your character sheet.'],
@@ -35,6 +35,6 @@ module.exports = class CharacterPrintCommand extends Command {
             type += 's'
         }
 
-        printCharacter(message, shadow_name, type)
+        printCharacter(message, message.author.id, shadow_name, type)
     }
 }

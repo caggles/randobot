@@ -4,7 +4,7 @@ const lists = require('../utils/const-character')
 require('dotenv').config()
 
 
-module.exports = function printCharacter(message, shadow_name, scope) {
+module.exports = function printCharacter(message, userid, shadow_name, scope) {
     return new Promise((resolve, reject) => {
         try {
 
@@ -14,8 +14,10 @@ module.exports = function printCharacter(message, shadow_name, scope) {
             client.connect(err => {
                 const collection = client.db("randobot").collection("characters");
 
+                userid = userid.replace('<','').replace('>','').replace('@', '').replace('!','')
+
                 //query for the character by shadow name and user (this is unique)
-                let query = {'shadow_name': shadow_name.toLowerCase(), 'userid': message.author.id}
+                let query = {'shadow_name': shadow_name.toLowerCase(), 'userid': userid}
                 let get_promise = collection.findOne(query)
                 get_promise.then(function (character) {
 

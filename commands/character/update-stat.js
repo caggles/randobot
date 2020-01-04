@@ -98,7 +98,7 @@ module.exports = class UpdateStatCommand extends Command {
                     if (type == 'specs') {
                         type = 'skills'
                     }
-                    let print_promise = printCharacter(message, character["value"]["shadow_name"], type)
+                    let print_promise = printCharacter(message, message.author.id, character["value"]["shadow_name"], type)
                     print_promise.then(function () {
                         message.say("Don't forget to update your `!xp-spend` for this change!")
                     })

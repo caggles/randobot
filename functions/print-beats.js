@@ -2,7 +2,7 @@ const MongoClient = require('mongodb').MongoClient
 require('dotenv').config()
 
 
-module.exports = async function printBeats(message, shadow_name, scope, number, type) {
+module.exports = async function printBeats(message, userid, shadow_name, scope, number, type) {
     return new Promise((resolve, reject) => {
         try {
 
@@ -13,7 +13,7 @@ module.exports = async function printBeats(message, shadow_name, scope, number, 
                 const collection = client.db("randobot").collection(type);
 
                 //build 'last' type query
-                let query = {'shadow_name': shadow_name.toLowerCase(), 'userid': message.author.id}
+                let query = {'shadow_name': shadow_name.toLowerCase(), 'userid': userid}
                 let get_promise = collection.find(query).sort({$natural: -1}).limit(number).toArray(function (err, beats_list) {
                     if (err) throw err;
                     let beatstring = ''

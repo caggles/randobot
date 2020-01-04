@@ -137,7 +137,7 @@ module.exports = class CharacterCreateCommand extends Command {
                 create_promise.then(function (character) {
 
                     //print the resulting character sheet
-                    let print_promise = printCharacter(message, character["ops"][0]["shadow_name"], 'all');
+                    let print_promise = printCharacter(message, message.author.id, character["ops"][0]["shadow_name"], 'all');
                     print_promise.then(function() {
                         message.say("This is just a default character sheet - update it with `!update-stat`!")
                     });

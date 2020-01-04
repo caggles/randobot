@@ -12,3 +12,4 @@ module.exports.alt_skill_names =
     'Politic': 'Politics',
     'Express': 'Expression',
     'Computer': 'Computers'}
+module.exports.validTypes = ['attributes', 'skills', 'arcana', 'merits', 'base', 'all']
