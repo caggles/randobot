@@ -68,6 +68,67 @@ module.exports = function printCharacter(message, userid, shadow_name, scope) {
                             generateStatBlock(message, 'Arcana', lists.arcana_names, character, 2)
                         }
 
+                        //print health if the scope is appropriate
+                        if (scope == 'health' || scope == 'consumable' || scope == 'all') {
+                            let healthblock = 'Health\n' + '```'
+                            let health_boxes = parseInt(character['attributes']['stamina']) + 5
+                            let total_health = parseInt(character['consumable']['health']['a']) + parseInt(character['consumable']['health']['l']) + parseInt(character['consumable']['health']['b'])
+                            for (let i = 0; i < character['consumable']['health']['a']; i++) {
+                                healthblock += '⦿'
+                            }
+                            for (let i = 0; i < character['consumable']['health']['l']; i++) {
+                                healthblock += '⊗'
+                            }
+                            for (let i = 0; i < character['consumable']['health']['b']; i++) {
+                                healthblock += '⊘'
+                            }
+                            for (let i = 0; i < (health_boxes - total_health); i++) {
+                                healthblock += '◯'
+                            }
+                            healthblock += '```'
+                            if ((health_boxes - total_health) < 3) {
+                                healthblock += 'You are sufficiently damaged to suffer a -' + (3 - (health_boxes - total_health)) + ' penalty to all dice pools.\n'
+                            }
+                            if (health_boxes == total_health) {
+                                healthblock += 'You are concussed. Your next turn will begin with a stamina roll to avoid passing out.\n'
+                                if (character['consumable']['health']['b'] == 0) {
+                                    healthblock += 'You are bleeding out. Your next turn will begin by taking an additional 1 lethal damage.\n'
+                                }
+                            }
+                            healthblock += '----'
+                            if (character['consumable']['health']['dead']) {
+                                healthblock = "**YOU ARE DEAD**\n\n:("
+                            }
+                            message.say(healthblock)
+                        }
+
+                        if (scope == 'willpower' || scope == 'consumable' || scope == 'all') {
+                            let wpblock = 'Willpower\n' + '```'
+                            for (let i = 0; i < character['attributes']['resolve'] + character['attributes']['composure']; i++) {
+                                if (i < character['consumable']['willpower']) {
+                                    wpblock += '⊠'
+                                } else {
+                                    wpblock += '⊡'
+                                }
+                            }
+                            wpblock += '```----'
+                            message.say(wpblock)
+                        }
+
+                        if (scope == 'mana' || scope == 'consumable' || scope == 'all') {
+                            let manablock = 'Mana\n' + '```'
+                            for (let i = 0; i < lists.totalMana[character['gnosis']]; i++) {
+                                if (i < character['consumable']['mana']) {
+                                    manablock += '⊠'
+                                } else {
+                                    manablock += '⊡'
+                                }
+                            }
+                            manablock += '```----'
+                            manablock = manablock.replace('``````', '```\nnone\n```')
+                            message.say(manablock)
+                        }
+
                         resolve(null);
                     }
                 });

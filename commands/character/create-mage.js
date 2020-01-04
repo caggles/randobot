@@ -110,9 +110,10 @@ module.exports = class CharacterCreateCommand extends Command {
                         merits: {},
                         consumable: {
                             health: {
-                                agg: 0,
-                                lethal: 0,
-                                bashing: 0
+                                a: 0,
+                                l: 0,
+                                b: 0,
+                                dead: false
                             },
                             willpower: 4,
                             mana: 0

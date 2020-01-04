@@ -4,8 +4,7 @@ const printXP = require('../../functions/print-xp')
 const printCharacter = require('../../functions/print-character')
 const lists = require('../../utils/const-character')
 
-
-module.exports = class RollCommand extends Command {
+module.exports = class PrintCommand extends Command {
     constructor(client) {
         super(client, {
             name: 'print',
@@ -71,23 +70,30 @@ module.exports = class RollCommand extends Command {
                 throw 'Invalid type!'
             }
 
+            // print character sheet
             if (msglist[1] == 'cs' || msglist[1] == 'sheet' || msglist[1] == 'character') {
                 printCharacter(message, userid, shadowname, type)
+
+            // print beats
             } else if (msglist[1] == 'beats' || msglist[1] == 'beat') {
                 if (type == 'all') {
                     type = 5
                 }
                 printBeats(message, userid, shadowname, 'last', parseInt(type), 'beats')
+
+            // print xp spends
             } else if (msglist[1] == 'xp-spends' || msglist[1] == 'xp-spend') {
                 if (type == 'all') {
                     type = 5
                 }
                 printBeats(message, userid, shadowname, 'last', parseInt(type), 'xp-spends')
+
+            // print total xp
             } else if (msglist[1] == 'xp') {
                 printXP(message, userid, shadowname)
             }
 
-            // catch errors
+        // catch errors
         } catch (err) {
             let errormsg = "Error: " + err + '\n' +
                         "Try the following:" +
