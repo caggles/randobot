@@ -104,7 +104,7 @@ module.exports = function printCharacter(message, userid, shadow_name, scope) {
 
                         if (scope == 'willpower' || scope == 'consumable' || scope == 'all') {
                             let wpblock = 'Willpower\n' + '```'
-                            for (let i = 0; i < character['attributes']['resolve'] + character['attributes']['composure']; i++) {
+                            for (let i = 0; i < (parseInt(character['attributes']['resolve']) + parseInt(character['attributes']['composure'])); i++) {
                                 if (i < character['consumable']['willpower']) {
                                     wpblock += '⊠'
                                 } else {

@@ -12,7 +12,7 @@ module.exports.alt_skill_names =
     'Politic': 'Politics',
     'Express': 'Expression',
     'Computer': 'Computers'}
-module.exports.validTypes = ['attributes', 'skills', 'arcana', 'merits', 'base', 'health', 'willpower', 'consumable', 'mana', 'all']
+module.exports.validTypes = ['attributes', 'attribute', 'skills', 'skill', 'arcana', 'merits', 'merit', 'base', 'health', 'willpower', 'wp', 'consumable', 'mana', 'all']
 module.exports.totalMana =
     {0: 0,
      1: 10,

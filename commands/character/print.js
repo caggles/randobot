@@ -65,6 +65,12 @@ module.exports = class PrintCommand extends Command {
             // format the userid to just get the id number
             userid = userid.replace('<','').replace('>','').replace('@', '').replace('!','')
 
+            if (type == 'attribute' || type == 'skill' || type == 'merit') {
+                type += 's'
+            } else if (type == 'wp') {
+                type = 'willpower'
+            }
+
             //check for a valid type
             if (!Number.isInteger(parseInt(type)) && !lists.validTypes.includes(type)) {
                 throw 'Invalid type!'

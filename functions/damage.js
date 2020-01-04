@@ -48,17 +48,21 @@ module.exports = async function damageDealt(message, shadow_name, number, type) 
                         //repeat for lethal
                         if (type == 'l') {
                             console.log('lethal damage')
-                            let diff = health_boxes - la_health
-                            console.log('diff = ' + diff)
+                            let l_diff = health_boxes - la_health
+                            let b_diff = health_boxes - bla_health
+                            console.log('diff = ' + l_diff)
                             console.log('number = ' + number)
-                            if (number <= diff) {
+                            if (number <= l_diff) {
                                 current_health['l'] += number
-                                current_health['b'] -= number
+                                current_health['b'] -= (number - b_diff)
                             } else {
                                 console.log('lethal will roll over')
-                                current_health['l'] += diff
-                                current_health['b'] = 0
-                                number -= diff
+                                current_health['l'] += l_diff
+                                current_health['b'] -= l_diff
+                                if (current_health['b'] < 0) {
+                                    current_health['b'] = 0
+                                }
+                                number -= l_diff
                                 type = 'a'
                             }
                         }
@@ -68,14 +72,16 @@ module.exports = async function damageDealt(message, shadow_name, number, type) 
                         //repeat for agg
                         if (type == 'a') {
                             console.log('agg damage')
-                            let diff = health_boxes - a_health
-                            console.log('diff = ' + diff)
+                            let a_diff = health_boxes - a_health
+                            let l_diff = health_boxes - la_health
+                            let b_diff = health_boxes - bla_health
+                            console.log('diff = ' + a_diff)
                             console.log('number = ' + number)
-                            if (number <= diff) {
+                            if (number <= a_diff) {
                                 current_health['a'] += number
-                                current_health['l'] -= number
+                                current_health['l'] -= (number - l_diff)
                             } else {
-                                current_health['a'] += diff
+                                current_health['a'] += a_diff
                                 current_health['l'] = 0
                                 current_health['b'] = 0
                                 current_health.dead = true
