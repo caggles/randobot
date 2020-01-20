@@ -52,7 +52,7 @@ module.exports = class CharacterCreateCommand extends Command {
                 beat_promise.then(function () {
 
                     //prints the beat
-                    printBeats(message, shadow_name, 'last', 1, 'beats')
+                    printBeats(message, message.author.id, shadow_name, 'last', 1, 'beats')
 
                 })
                 .catch(function (err) {

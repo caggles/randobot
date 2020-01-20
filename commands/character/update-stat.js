@@ -23,9 +23,9 @@ module.exports = class UpdateStatCommand extends Command {
                 },
                 {
                     key: 'type',
-                    prompt: 'What type of stat are you are updating? (attributes, skills, arcana, merits, base)',
+                    prompt: 'What type of stat are you are updating? (attributes, skills, specs, arcana, merits, base)',
                     type: 'string',
-                    oneOf: ['arcana', 'attributes', 'attribute', 'skill', 'skills', 'merit', 'merits', 'base']
+                    oneOf: ['arcana', 'attributes', 'attribute', 'skill', 'skills', 'spec', 'specialization', 'specs', 'specializations', 'merit', 'merits', 'consumable', 'base']
                 },
                 {
                     key: 'name',
@@ -52,13 +52,18 @@ module.exports = class UpdateStatCommand extends Command {
             if (type.toLowerCase() === 'attribute' || type.toLowerCase() === 'skill' || type.toLowerCase() === 'merit') {
                 type += 's'
             }
+            if (type.toLowerCase() === 'specializations' || type.toLowerCase() === 'specialization' || type.toLowerCase() === 'spec') {
+                type = 'specs'
+            }
 
             //check for the validity of the stat name, to avoid accidentally adding a new stat called "investigate".
-            // TODO: add a stat dictionary so "investigate" automatically swaps to "investigation", etc.
+            if (lists.alt_skill_names[name.capitalize()] !== undefined) {
+                name = lists.alt_skill_names[name.capitalize()].toLowerCase()
+            }
             if (type === 'attributes' && !(lists.attribute_names.includes(name.capitalize()))) {
                 throw Error ('That is not a valid attribute name!')
             }
-            if (type === 'skills' && !(lists.skill_names.includes(name.capitalize()))) {
+            if ((type === 'skills' || type === 'specs') && !(lists.skill_names.includes(name.capitalize()))) {
                 throw Error ('That is not a valid skill name!')
             }
             if (type === 'arcana' && !(lists.arcana_names.includes(name.capitalize()))) {
@@ -90,7 +95,10 @@ module.exports = class UpdateStatCommand extends Command {
                 update_promise.then(function (character) {
 
                     //print the new character sheet with update info.
-                    let print_promise = printCharacter(message, character["value"]["shadow_name"], type)
+                    if (type == 'specs') {
+                        type = 'skills'
+                    }
+                    let print_promise = printCharacter(message, message.author.id, character["value"]["shadow_name"], type)
                     print_promise.then(function () {
                         message.say("Don't forget to update your `!xp-spend` for this change!")
                     })

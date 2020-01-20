@@ -64,7 +64,7 @@ module.exports = class CharacterCreateCommand extends Command {
                         'shadow_name': shadow_name.toLowerCase(),
                         'path': path.toLowerCase(),
                         'order': '',
-                        'gnosis': 0,
+                        'gnosis': '0',
                         'virtue': virtue.toLowerCase(),
                         'vice': vice.toLowerCase(),
                         'beats': 0,
@@ -106,6 +106,18 @@ module.exports = class CharacterCreateCommand extends Command {
                             'weaponry': 0,
                             'subterfuge': 0
                         },
+                        specs: {},
+                        merits: {},
+                        consumable: {
+                            health: {
+                                a: 0,
+                                l: 0,
+                                b: 0,
+                                dead: false
+                            },
+                            willpower: 4,
+                            mana: 0
+                        },
                         arcana: {
                             'death': 0,
                             'fate': 0,
@@ -117,8 +129,7 @@ module.exports = class CharacterCreateCommand extends Command {
                             'space': 0,
                             'spirit': 0,
                             'time': 0
-                        },
-                        merits: {}
+                        }
                     }
 
                 //insert new character document.
@@ -127,7 +138,7 @@ module.exports = class CharacterCreateCommand extends Command {
                 create_promise.then(function (character) {
 
                     //print the resulting character sheet
-                    let print_promise = printCharacter(message, character["ops"][0]["shadow_name"], 'all');
+                    let print_promise = printCharacter(message, message.author.id, character["ops"][0]["shadow_name"], 'all');
                     print_promise.then(function() {
                         message.say("This is just a default character sheet - update it with `!update-stat`!")
                     });

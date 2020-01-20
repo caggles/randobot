@@ -6,7 +6,7 @@ module.exports = class XPSpendsPrintCommand extends Command {
     constructor(client) {
         super(client, {
             name: 'print-xp-spends',
-            group: 'character',
+            group: 'archive',
             memberName: 'print-xp-spends',
             description: 'prints recent xp spends',
             examples: ['`!print-xp-spends [shadow-name] x` to print the x most recent xp spends.'],
@@ -26,6 +26,6 @@ module.exports = class XPSpendsPrintCommand extends Command {
     }
 
     run(message, {shadow_name, number}) {
-        printBeats(message, shadow_name, 'last', number, 'xp-spends')
+        printBeats(message, message.author.id, shadow_name, 'last', number, 'xp-spends')
     }
 }

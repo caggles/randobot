@@ -15,7 +15,8 @@ client.registry
     .registerGroups([
         ['dice', 'Dice Commands'],
         ['tarot', 'Tarot Commands'],
-        ['character', 'Character Commands']
+        ['character', 'Character Commands'],
+        ['archive', 'Old Archived Commands (not guaranteed to work)']
     ])
     .registerDefaultGroups()
     .registerDefaultCommands({

@@ -1,29 +1,9 @@
-const MongoClient = require('mongodb').MongoClient
+const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
-const { Command } = require('discord.js-commando')
-const printBeats = require('../../functions/print-beats')
-require('dotenv').config()
+require('dotenv').config();
 
-module.exports = class XPPrintCommand extends Command {
-    constructor(client) {
-        super(client, {
-            name: 'xp-total',
-            group: 'character',
-            memberName: 'xp-total',
-            description: 'prints total xp earned and spent',
-            examples: ['`!xp-total [shadow-name]`'],
-            args: [
-                {
-                    key: 'shadow_name',
-                    prompt: 'What is your character\'s shadow name?',
-                    type: 'string'
-                }
-            ]
-        });
-    }
-
-    async run(message, {shadow_name, number}) {
-
+module.exports = async function printXP(message, userid, shadow_name) {
+    return new Promise((resolve, reject) => {
         try {
 
             const uri = "mongodb+srv://randobot:" + process.env.MONGO_PASSWORD + "@randobot-eni9x.mongodb.net/test?retryWrites=true&w=majority";
@@ -96,7 +76,5 @@ module.exports = class XPPrintCommand extends Command {
         } catch (err) {
             message.reply("Error: " + err);
         }
-
-
-    }
+    });
 }
