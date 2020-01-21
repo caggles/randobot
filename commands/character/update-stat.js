@@ -23,7 +23,7 @@ module.exports = class UpdateStatCommand extends Command {
                 },
                 {
                     key: 'type',
-                    prompt: 'What type of stat are you are updating? (attributes, skills, specs, arcana, merits, base)',
+                    prompt: 'What type of stat are you are updating? (attributes, skills, specs, arcana, merits, consumable, base)',
                     type: 'string',
                     oneOf: ['arcana', 'attributes', 'attribute', 'skill', 'skills', 'spec', 'specialization', 'specs', 'specializations', 'merit', 'merits', 'consumable', 'base']
                 },
