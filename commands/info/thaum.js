@@ -39,19 +39,20 @@ module.exports = class CreativeThaumaturgyCommand extends Command {
             let practiceInfo = magic.practices[practice]
             let useString = ''
 
+            const embedMessage = new Discord.RichEmbed()
+                .setTitle(practice.capitalize() + " " + arcanum.capitalize())
+                .setColor(color)
+                .addField('Level', practiceInfo.level.capitalize(), false)
+                .addField('Effect', purviewReplace(practiceInfo.definition, arcanum), false)
+
             if (practiceInfo.uses.length > 0) {
                 for (let spell of practiceInfo.uses) {
                     useString += purviewReplace(spell, arcanum) + '\n'
                 }
+                embedMessage.addField('Spell Mechanics', useString);
             }
 
 
-            const embedMessage = new Discord.RichEmbed()
-                .setTitle(practice.capitalize() + " " + arcanum.capitalize())
-                .setColor(color)
-                .addField('Level', practiceInfo.level, false)
-                .addField('Effect', purviewReplace(practiceInfo.definition, arcanum), false)
-                .addField('Spell Mechanics', useString);
             message.embed(embedMessage);
 
         } catch (err) {
@@ -74,11 +75,21 @@ function purviewReplace(string, arcanum) {
     if (string.includes('[')) {
         purviewList = string.toString().split('[')[1].split(']')[0].split(',')
         for (let purviewType of purviewList) {
-            console.log(magic.arcana[arcanum][purviewType])
-            purviews += magic.arcana[arcanum][purviewType] + ', '
+            if (typeof magic.arcana[arcanum][purviewType] == "string") {
+                purviews += magic.arcana[arcanum][purviewType]
+            } else {
+                for (let i = 0; i < magic.arcana[arcanum][purviewType].length; i++) {
+                    if (i == magic.arcana[arcanum][purviewType].length-1) {
+                        purviews = purviews.substring(0, purviews.length-2) + ' and ' + magic.arcana[arcanum][purviewType][i]
+                    } else {
+                        purviews += magic.arcana[arcanum][purviewType][i] + ', '
+                    }
+                }
+            }
+
         }
-        purviews = purviews.substring(0, purviews.length-2)
-        string = string.replace('[' + purviewList.join(', ') + ']', purviews)
+
+        string = string.replace('[' + purviewList.join(',') + ']', purviews)
     }
 
     return string
