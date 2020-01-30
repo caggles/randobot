@@ -6,7 +6,7 @@ module.exports = async function printXP(message, userid, shadow_name) {
     return new Promise((resolve, reject) => {
         try {
 
-            const uri = "mongodb://randobot:" + process.env.MONGO_PASSWORD + "@" + process.env.MONGO_URL + "/" + process.env.MONGO_NAME + "?retryWrites=true&w=majority";
+            const uri = process.env.MONGO_URI;
             const client = new MongoClient(uri, {useNewUrlParser: true});
 
             //connect to the "characters" collection

@@ -27,7 +27,7 @@ module.exports = class TarotLookupCommand extends Command {
                 card_name = card_name.substring(4, card_name.length)
             }
             console.log(card_name)
-            const uri = "mongodb://randobot:" + process.env.MONGO_PASSWORD + "@" + process.env.MONGO_URL + "/" + process.env.MONGO_NAME + "?retryWrites=true&w=majority";
+            const uri = process.env.MONGO_URI;
             const client = new MongoClient(uri, {useNewUrlParser: true});
             client.connect(err => {
                 const collection = client.db(process.env.MONGO_NAME).collection("tarot");
