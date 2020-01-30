@@ -38,10 +38,10 @@ module.exports = class CharacterCreateCommand extends Command {
         try {
 
             //connect to the "xp-spends" collection
-            const uri = "mongodb+srv://randobot:" + process.env.MONGO_PASSWORD + "@randobot-eni9x.mongodb.net/test?retryWrites=true&w=majority";
+            const uri = process.env.MONGO_URI;
             const client = new MongoClient(uri, {useNewUrlParser: true});
             client.connect(err => {
-                const collection = client.db("randobot").collection("xp-spends");
+                const collection = client.db(process.env.MONGO_NAME).collection("xp-spends");
 
                 let spend =
                     {   'user': message.author.username,

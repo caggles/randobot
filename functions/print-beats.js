@@ -7,10 +7,10 @@ module.exports = async function printBeats(message, userid, shadow_name, scope, 
         try {
 
             //connect to the correct collection
-            const uri = "mongodb+srv://randobot:" + process.env.MONGO_PASSWORD + "@randobot-eni9x.mongodb.net/test?retryWrites=true&w=majority";
+            const uri = process.env.MONGO_URI;
             const client = new MongoClient(uri, {useNewUrlParser: true});
             client.connect(err => {
-                const collection = client.db("randobot").collection(type);
+                const collection = client.db(process.env.MONGO_NAME).collection(type);
 
                 //build 'last' type query
                 let query = {'shadow_name': shadow_name.toLowerCase(), 'userid': userid}

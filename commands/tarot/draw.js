@@ -35,7 +35,7 @@ module.exports = class TarotDrawCommand extends Command {
             detailed = true
         }
 
-        const uri = "mongodb+srv://randobot:" + process.env.MONGO_PASSWORD + "@randobot-eni9x.mongodb.net/test?retryWrites=true&w=majority";
+        const uri = process.env.MONGO_URI;
         const client = new MongoClient(uri, {useNewUrlParser: true});
         client.connect(err => {
             const collection = client.db("randobot").collection("tarot");

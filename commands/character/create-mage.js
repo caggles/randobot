@@ -51,10 +51,10 @@ module.exports = class CharacterCreateCommand extends Command {
         try {
 
             //connect to the "character" collection
-            const uri = "mongodb+srv://randobot:" + process.env.MONGO_PASSWORD + "@randobot-eni9x.mongodb.net/test?retryWrites=true&w=majority";
+            const uri = process.env.MONGO_URI;
             const client = new MongoClient(uri, {useNewUrlParser: true});
             client.connect(err => {
-                const collection = client.db("randobot").collection("characters");
+                const collection = client.db(process.env.MONGO_NAME).collection("characters");
 
                 //define the document for the new character, including a bunch of base stats
                 let character =

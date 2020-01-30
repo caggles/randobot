@@ -27,10 +27,10 @@ module.exports = class TarotLookupCommand extends Command {
                 card_name = card_name.substring(4, card_name.length)
             }
             console.log(card_name)
-            const uri = "mongodb+srv://randobot:" + process.env.MONGO_PASSWORD + "@randobot-eni9x.mongodb.net/test?retryWrites=true&w=majority";
+            const uri = process.env.MONGO_URI;
             const client = new MongoClient(uri, {useNewUrlParser: true});
             client.connect(err => {
-                const collection = client.db("randobot").collection("tarot");
+                const collection = client.db(process.env.MONGO_NAME).collection("tarot");
                 let query = {name_lower: card_name}
                 if (isNumeric(card_name[0])) {
                     query = {value_num: parseInt(card_name.split(" of ")[0]), suit: card_name.split(" of ")[1]}
