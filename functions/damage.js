@@ -6,10 +6,10 @@ module.exports = async function damageDealt(message, shadow_name, number, type) 
     return new Promise((resolve, reject) => {
         try {
 
-            const uri = "mongodb+srv://randobot:" + process.env.MONGO_PASSWORD + "@randobot-eni9x.mongodb.net/test?retryWrites=true&w=majority";
+            const uri = "mongodb://randobot:" + process.env.MONGO_PASSWORD + "@" + process.env.MONGO_URL + "/" + process.env.MONGO_NAME + "?retryWrites=true&w=majority";
             const client = new MongoClient(uri, {useNewUrlParser: true});
             client.connect(err => {
-                const collection = client.db("randobot").collection("characters");
+                const collection = client.db(process.env.MONGO_NAME).collection("characters");
 
                 //query against the given shadow name and the user's ID, to make sure nobody can edit another person's character.
                 let query = {shadow_name: shadow_name.toLowerCase(), userid: message.author.id}

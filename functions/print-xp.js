@@ -6,12 +6,12 @@ module.exports = async function printXP(message, userid, shadow_name) {
     return new Promise((resolve, reject) => {
         try {
 
-            const uri = "mongodb+srv://randobot:" + process.env.MONGO_PASSWORD + "@randobot-eni9x.mongodb.net/test?retryWrites=true&w=majority";
+            const uri = "mongodb://randobot:" + process.env.MONGO_PASSWORD + "@" + process.env.MONGO_URL + "/" + process.env.MONGO_NAME + "?retryWrites=true&w=majority";
             const client = new MongoClient(uri, {useNewUrlParser: true});
 
             //connect to the "characters" collection
             client.connect(err => {
-                const collection = client.db("randobot").collection("characters");
+                const collection = client.db(process.env.MONGO_NAME).collection("characters");
 
                 //query for the character by shadow name and user (this is unique)
                 let query = {'shadow_name': shadow_name.toLowerCase(), 'userid': message.author.id}
