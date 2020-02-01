@@ -27,7 +27,7 @@ module.exports = async function printXP(message, userid, shadow_name) {
 
                         //connect to the "beats" collection
                         client.connect(err => {
-                            const collection = client.db("randobot").collection("beats");
+                            const collection = client.db(process.env.MONGO_NAME).collection("beats");
 
                             //query for a count of beats by shadow name and user
                             let query = {'shadow_name': shadow_name.toLowerCase(), 'userid': message.author.id}
@@ -43,7 +43,7 @@ module.exports = async function printXP(message, userid, shadow_name) {
 
                                     //connect to the "xp-spends" collection
                                     client.connect(err => {
-                                        const collection = client.db("randobot").collection("xp-spends");
+                                        const collection = client.db(process.env.MONGO_NAME).collection("xp-spends");
 
                                         //query for a count of the total xp spent by shadow name and user
                                         let query = {
