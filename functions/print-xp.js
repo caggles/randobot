@@ -39,7 +39,7 @@ module.exports = async function printXP(message, userid, shadow_name) {
                                     console.log(documents)
                                     let earned_xp = Math.floor(documents[0]["count"] / 5);
                                     let beats = documents[0]["count"] % 5;
-                                    console.log(earned_xp)
+                                    console.log(earned_xp + " " + beats);
 
                                     //connect to the "xp-spends" collection
                                     client.connect(err => {
@@ -49,7 +49,8 @@ module.exports = async function printXP(message, userid, shadow_name) {
                                         let query = {
                                             'shadow_name': shadow_name.toLowerCase(),
                                             'userid': message.author.id
-                                        }
+                                        };
+
                                         collection.aggregate(
                                             [{'$match': query}, {
                                                 '$group': {
@@ -58,9 +59,9 @@ module.exports = async function printXP(message, userid, shadow_name) {
                                                 }
                                             }],
                                             function (err, cursor) {
-                                                assert.equal(err, null);
+                                                //assert.equal(err, null);
                                                 cursor.toArray(function (err, documents) {
-                                                    let totalXP = starting_xp + earned_xp
+                                                    let totalXP = starting_xp + earned_xp;
                                                     message.reply("\nTotal XP Earned: " + totalXP + "\nTotal XP Spent: " + documents[0]["totalAmount"] + "\nBeats Remaining: " + beats)
                                                 });
                                             }
