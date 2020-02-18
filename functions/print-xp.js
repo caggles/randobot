@@ -14,7 +14,7 @@ module.exports = async function printXP(message, userid, shadow_name) {
                 const collection = client.db(process.env.MONGO_NAME).collection("characters");
 
                 //query for the character by shadow name and user (this is unique)
-                let query = {'shadow_name': shadow_name.toLowerCase(), 'userid': userid}
+                let query = {'shadow_name': shadow_name.toLowerCase(), 'userid': message.author.id}
                 let get_promise = collection.findOne(query)
                 get_promise.then(function (character) {
 
