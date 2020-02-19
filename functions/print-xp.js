@@ -52,17 +52,16 @@ module.exports = async function printXP(message, userid, shadow_name) {
                                         };
 
                                         collection.aggregate(
-                                            [{'$match': query}, {
-                                                '$group': {
-                                                    '_id': null,
-                                                    'totalAmount': {'$sum': '$amount'}
-                                                }
-                                            }],
+                                            [{'$match': query}, {'$group': {'_id': null, 'totalAmount': {'$sum': '$amount'}}}],
                                             function (err, cursor) {
                                                 //assert.equal(err, null);
                                                 cursor.toArray(function (err, documents) {
                                                     let totalXP = starting_xp + earned_xp;
-                                                    message.reply("\nTotal XP Earned: " + totalXP + "\nTotal XP Spent: " + documents[0]["totalAmount"] + "\nBeats Remaining: " + beats)
+                                                    let XPspent = 0;
+                                                    if (documents[0] != null) {
+                                                        XPspent = documents[0]["totalAmount"]
+                                                    }
+                                                    message.reply("\nTotal XP Earned: " + totalXP + "\nTotal XP Spent: " + XPspent + "\nBeats Remaining: " + beats)
                                                 });
                                             }
                                         );
