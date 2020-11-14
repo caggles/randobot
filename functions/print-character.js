@@ -4,21 +4,22 @@ const lists = require('../utils/const-character')
 require('dotenv').config()
 
 
-module.exports = function printCharacter(message, userid, shadow_name, scope) {
+module.exports = async function printCharacter(message, userid, shadow_name, scope) {
     return new Promise((resolve, reject) => {
         try {
 
             //connect to the "characters" collection
-            const uri = process.env.MONGO_URI
+            const uri = process.env.MONGO_URI;
             const client = new MongoClient(uri, {useNewUrlParser: true});
-            client.connect(err => {
-                const collection = client.db(process.env.MONGO_NAME).collection("characters");
+            let connect_promise = client.connect();
+            connect_promise.then(function (promise) {
+                let collection = client.db(process.env.MONGO_NAME).collection("characters");
 
-                userid = userid.replace('<','').replace('>','').replace('@', '').replace('!','')
+                userid = userid.replace('<', '').replace('>', '').replace('@', '').replace('!', '')
 
                 //query for the character by shadow name and user (this is unique)
                 let query = {'shadow_name': shadow_name.toLowerCase(), 'userid': userid}
-                let get_promise = collection.findOne(query)
+                let get_promise = collection.findOne(query);
                 get_promise.then(function (character) {
 
                     if (character == null) {
